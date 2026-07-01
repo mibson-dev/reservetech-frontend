@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ReserveTech - Minhas Reservas</title>
+  </head>
+  <body>
+    <header class="header-com-acao">
+      <h1>ReserveTech</h1>
+      <button id="btn-logout" class="btn-logout">Sair</button>
+    </header>
+
+    <main>
+      <div class="container-coleta-formulario">
+        <h2 id="saudacao">Bem-vindo!</h2>
+
+        <div class="barra-acoes">
+          <div class="filtro-periodo">
+            <label for="filtro">Mostrar:</label>
+            <select id="filtro">
+              <option value="todas">Todas</option>
+              <option value="hoje">Hoje</option>
+              <option value="semana">Esta semana</option>
+              <option value="mes">Este mês</option>
+              <option value="semestre">Últimos 6 meses</option>
+            </select>
+          </div>
+
+          <a href="nova-reserva.html" class="btn-submit btn-link"
+            >+ Nova Reserva</a
+          >
+        </div>
+
+        <div id="lista-reservas"></div>
+      </div>
+    </main>
+
+    <script src="js/logout.js"></script>
+    <script src="js/reservas.js"></script>
+  </body>
+</html>
