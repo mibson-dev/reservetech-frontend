@@ -419,7 +419,7 @@ fieldset legend {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url("https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80");
+  background-image: url("/img/logo_fsaa.png");
   background-size: cover;
   background-position: center;
   display: flex;
