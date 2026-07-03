@@ -413,3 +413,62 @@ fieldset legend {
   margin-bottom: 24px;
   text-align: center;
 }
+
+/* ===== INDEX / LANDING PAGE ===== */
+.body-index {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-image: url("https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay-fosco {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-abertura {
+  text-align: center;
+  color: white;
+  padding: 48px 40px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  max-width: 420px;
+  width: 90%;
+}
+
+.container-abertura h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.container-abertura p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 32px;
+}
+
+.logo-faculdade {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.btn-acessar {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 14px 32px;
+  width: auto;
+}
