@@ -71,8 +71,22 @@ function statusParaClasse(status) {
   return "pendente";
 }
 
+function criarCampo(label, elemento) {
+  const div = document.createElement("div");
+  div.className = "coleta-dados";
+  div.style.marginBottom = "10px";
+  const lbl = document.createElement("label");
+  lbl.textContent = label;
+  div.appendChild(lbl);
+  div.appendChild(elemento);
+  return div;
+}
+
 function abrirEdicao(card, equipamento) {
-  card.innerHTML = "";
+  card.innerHTML =
+    "<strong style='font-size:15px;'>Editando: " +
+    equipamento.nome +
+    "</strong><br><br>";
 
   const inputNome = document.createElement("input");
   inputNome.type = "text";
@@ -96,9 +110,18 @@ function abrirEdicao(card, equipamento) {
     selectStatus.appendChild(opcao);
   });
 
+  card.appendChild(criarCampo("Nome", inputNome));
+  card.appendChild(criarCampo("Descrição", inputDescricao));
+  card.appendChild(criarCampo("Quantidade", inputQuantidade));
+  card.appendChild(criarCampo("Status", selectStatus));
+
+  const divBotoes = document.createElement("div");
+  divBotoes.style.cssText = "display:flex; gap:8px; margin-top:12px;";
+
   const btnSalvar = document.createElement("button");
   btnSalvar.textContent = "Salvar";
   btnSalvar.className = "btn-submit";
+  btnSalvar.style.cssText = "width:auto; padding:8px 20px;";
   btnSalvar.addEventListener("click", function () {
     salvarEdicao(equipamento.id, {
       nome: inputNome.value,
@@ -110,20 +133,12 @@ function abrirEdicao(card, equipamento) {
 
   const btnCancelar = document.createElement("button");
   btnCancelar.textContent = "Cancelar";
-  btnCancelar.className = "btn-secundario";
+  btnCancelar.className = "btn-cancelar";
   btnCancelar.addEventListener("click", carregarEquipamentos);
 
-  [
-    inputNome,
-    inputDescricao,
-    inputQuantidade,
-    selectStatus,
-    btnSalvar,
-    btnCancelar,
-  ].forEach(function (el) {
-    card.appendChild(el);
-    card.appendChild(document.createElement("br"));
-  });
+  divBotoes.appendChild(btnSalvar);
+  divBotoes.appendChild(btnCancelar);
+  card.appendChild(divBotoes);
 }
 
 function salvarEdicao(id, dados) {

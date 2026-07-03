@@ -1,55 +1,51 @@
 const token = localStorage.getItem("token");
 const selectSala = document.querySelector("#sala");
-const selectHorarioInicio = document.querySelector("#horario-inicio");
-const selectHorarioFim = document.querySelector("#horario-fim");
+const selectPeriodo = document.querySelector("#periodo");
 const listaItens = document.querySelector("#lista-itens");
 const btnAdicionarItem = document.querySelector("#btn-adicionar-item");
 const form = document.querySelector("#form-reserva");
 const mensagemErro = document.querySelector("#erro-reserva");
+const API = "https://reservetech-backend.onrender.com";
 
 let dispositivosDisponiveis = [];
 
-function preencherHorarios(select) {
-  for (let hora = 0; hora < 24; hora++) {
-    for (let minuto = 0; minuto < 60; minuto += 30) {
-      const horaTexto = String(hora).padStart(2, "0");
-      const minutoTexto = String(minuto).padStart(2, "0");
-      const valor = horaTexto + ":" + minutoTexto;
-
-      const opcao = document.createElement("option");
-      opcao.value = valor;
-      opcao.textContent = valor;
-      select.appendChild(opcao);
-    }
-  }
-}
-
-preencherHorarios(selectHorarioInicio);
-preencherHorarios(selectHorarioFim);
-
-fetch("https://reservetech-backend.onrender.com/salas", {
-  headers: { Authorization: "Bearer " + token },
-})
-  .then(function (response) {
-    return response.json();
-  })
+fetch(API + "/salas", { headers: { Authorization: "Bearer " + token } })
+  .then((r) => r.json())
   .then(function (pagina) {
     selectSala.innerHTML =
       '<option value="" disabled selected>Selecione uma sala...</option>';
     pagina.content.forEach(function (sala) {
-      const opcao = document.createElement("option");
-      opcao.value = sala.id;
-      opcao.textContent = sala.nome + " (" + sala.andar + ")";
-      selectSala.appendChild(opcao);
+      const op = document.createElement("option");
+      op.value = sala.id;
+      op.textContent = sala.nome + " (" + sala.andar + ")";
+      selectSala.appendChild(op);
     });
   });
 
-fetch("https://reservetech-backend.onrender.com/dispositivos", {
-  headers: { Authorization: "Bearer " + token },
-})
-  .then(function (response) {
-    return response.json();
-  })
+fetch(API + "/periodos", { headers: { Authorization: "Bearer " + token } })
+  .then((r) => r.json())
+  .then(function (periodos) {
+    selectPeriodo.innerHTML =
+      '<option value="" disabled selected>Selecione um período...</option>';
+    periodos.forEach(function (periodo) {
+      const op = document.createElement("option");
+      op.value = JSON.stringify({
+        inicio: periodo.horarioInicio,
+        fim: periodo.horarioFim,
+      });
+      op.textContent =
+        periodo.descricao +
+        " (" +
+        periodo.horarioInicio.substring(0, 5) +
+        " às " +
+        periodo.horarioFim.substring(0, 5) +
+        ")";
+      selectPeriodo.appendChild(op);
+    });
+  });
+
+fetch(API + "/dispositivos", { headers: { Authorization: "Bearer " + token } })
+  .then((r) => r.json())
   .then(function (pagina) {
     dispositivosDisponiveis = pagina.content;
     criarLinhaItem();
@@ -63,10 +59,10 @@ function criarLinhaItem() {
   select.className = "select-dispositivo";
   select.innerHTML = '<option value="" disabled selected>Selecione...</option>';
   dispositivosDisponiveis.forEach(function (dispositivo) {
-    const opcao = document.createElement("option");
-    opcao.value = dispositivo.id;
-    opcao.textContent = dispositivo.nome;
-    select.appendChild(opcao);
+    const op = document.createElement("option");
+    op.value = dispositivo.id;
+    op.textContent = dispositivo.nome;
+    select.appendChild(op);
   });
 
   const inputQuantidade = document.createElement("input");
@@ -98,8 +94,12 @@ form.addEventListener("submit", function (evento) {
 
   const salaId = selectSala.value;
   const data = document.querySelector("#data").value;
-  const horarioInicio = document.querySelector("#horario-inicio").value;
-  const horarioFim = document.querySelector("#horario-fim").value;
+  const periodoSelecionado = selectPeriodo.value;
+
+  if (!periodoSelecionado) {
+    mensagemErro.textContent = "Selecione um período de aula.";
+    return;
+  }
 
   const dataAtual = new Date();
   dataAtual.setHours(0, 0, 0, 0);
@@ -110,31 +110,27 @@ form.addEventListener("submit", function (evento) {
     return;
   }
 
-  if (horarioFim <= horarioInicio) {
-    mensagemErro.textContent =
-      "O horário de término deve ser posterior ao horário de início.";
-    return;
-  }
+  const horarios = JSON.parse(periodoSelecionado);
 
   const linhas = document.querySelectorAll(".linha-item");
   const itens = Array.from(linhas).map(function (linha) {
-    const dispositivoId = linha.querySelector(".select-dispositivo").value;
-    const quantidade = linha.querySelector(".input-quantidade").value;
     return {
-      dispositivoId: Number(dispositivoId),
-      quantidadeReservada: Number(quantidade),
+      dispositivoId: Number(linha.querySelector(".select-dispositivo").value),
+      quantidadeReservada: Number(
+        linha.querySelector(".input-quantidade").value,
+      ),
     };
   });
 
   const dadosReserva = {
     salaId: Number(salaId),
     dataReserva: data,
-    horarioInicio: horarioInicio + ":00",
-    horarioFim: horarioFim + ":00",
+    horarioInicio: horarios.inicio,
+    horarioFim: horarios.fim,
     itens: itens,
   };
 
-  fetch("https://reservetech-backend.onrender.com/reservas", {
+  fetch(API + "/reservas", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

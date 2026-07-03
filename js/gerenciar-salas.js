@@ -53,8 +53,22 @@ function criarCardSala(sala) {
   return card;
 }
 
+function criarCampoSala(label, elemento) {
+  const div = document.createElement("div");
+  div.className = "coleta-dados";
+  div.style.marginBottom = "10px";
+  const lbl = document.createElement("label");
+  lbl.textContent = label;
+  div.appendChild(lbl);
+  div.appendChild(elemento);
+  return div;
+}
+
 function abrirEdicao(card, sala) {
-  card.innerHTML = "";
+  card.innerHTML =
+    "<strong style='font-size:15px;'>Editando: " +
+    sala.nome +
+    "</strong><br><br>";
 
   const inputNome = document.createElement("input");
   inputNome.type = "text";
@@ -64,9 +78,16 @@ function abrirEdicao(card, sala) {
   inputAndar.type = "text";
   inputAndar.value = sala.andar;
 
+  card.appendChild(criarCampoSala("Nome", inputNome));
+  card.appendChild(criarCampoSala("Andar", inputAndar));
+
+  const divBotoes = document.createElement("div");
+  divBotoes.style.cssText = "display:flex; gap:8px; margin-top:12px;";
+
   const btnSalvar = document.createElement("button");
   btnSalvar.textContent = "Salvar";
   btnSalvar.className = "btn-submit";
+  btnSalvar.style.cssText = "width:auto; padding:8px 20px;";
   btnSalvar.addEventListener("click", function () {
     salvarEdicao(sala.id, {
       nome: inputNome.value,
@@ -76,13 +97,12 @@ function abrirEdicao(card, sala) {
 
   const btnCancelar = document.createElement("button");
   btnCancelar.textContent = "Cancelar";
-  btnCancelar.className = "btn-secundario";
+  btnCancelar.className = "btn-cancelar";
   btnCancelar.addEventListener("click", carregarSalas);
 
-  [inputNome, inputAndar, btnSalvar, btnCancelar].forEach(function (el) {
-    card.appendChild(el);
-    card.appendChild(document.createElement("br"));
-  });
+  divBotoes.appendChild(btnSalvar);
+  divBotoes.appendChild(btnCancelar);
+  card.appendChild(divBotoes);
 }
 
 function salvarEdicao(id, dados) {

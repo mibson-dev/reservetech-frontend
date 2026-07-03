@@ -39,6 +39,8 @@ function criarCardUsuario(usuario) {
   const btnEditar = document.createElement("button");
   btnEditar.textContent = "Editar";
   btnEditar.className = "btn-editar";
+  btnEditar.style.width = "auto";
+  btnEditar.style.padding = "6px 12px";
   btnEditar.addEventListener("click", function () {
     abrirEdicao(card, usuario);
   });
@@ -61,8 +63,22 @@ function criarCardUsuario(usuario) {
   return card;
 }
 
+function criarCampoUsuario(label, elemento) {
+  const div = document.createElement("div");
+  div.className = "coleta-dados";
+  div.style.marginBottom = "10px";
+  const lbl = document.createElement("label");
+  lbl.textContent = label;
+  div.appendChild(lbl);
+  div.appendChild(elemento);
+  return div;
+}
+
 function abrirEdicao(card, usuario) {
-  card.innerHTML = "";
+  card.innerHTML =
+    "<strong style='font-size:15px;'>Editando: " +
+    usuario.nome +
+    "</strong><br><br>";
 
   const inputNome = document.createElement("input");
   inputNome.type = "text";
@@ -81,9 +97,17 @@ function abrirEdicao(card, usuario) {
     selectPerfil.appendChild(opcao);
   });
 
+  card.appendChild(criarCampoUsuario("Nome", inputNome));
+  card.appendChild(criarCampoUsuario("E-mail", inputEmail));
+  card.appendChild(criarCampoUsuario("Perfil", selectPerfil));
+
+  const divBotoes = document.createElement("div");
+  divBotoes.style.cssText = "display:flex; gap:8px; margin-top:12px;";
+
   const btnSalvar = document.createElement("button");
   btnSalvar.textContent = "Salvar";
   btnSalvar.className = "btn-submit";
+  btnSalvar.style.cssText = "width:auto; padding:8px 20px;";
   btnSalvar.addEventListener("click", function () {
     salvarEdicao(usuario.id, {
       nome: inputNome.value,
@@ -94,15 +118,17 @@ function abrirEdicao(card, usuario) {
 
   const btnCancelar = document.createElement("button");
   btnCancelar.textContent = "Cancelar";
-  btnCancelar.className = "btn-secundario";
+  btnCancelar.className = "btn-cancelar";
   btnCancelar.addEventListener("click", carregarUsuarios);
 
-  [inputNome, inputEmail, selectPerfil, btnSalvar, btnCancelar].forEach(
-    function (el) {
-      card.appendChild(el);
-      card.appendChild(document.createElement("br"));
-    },
-  );
+  divBotoes.appendChild(btnSalvar);
+  divBotoes.appendChild(btnCancelar);
+  card.appendChild(divBotoes);
+
+  [].forEach(function (el) {
+    card.appendChild(el);
+    card.appendChild(document.createElement("br"));
+  });
 }
 
 function salvarEdicao(id, dados) {
