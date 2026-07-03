@@ -156,6 +156,21 @@ fieldset legend {
   margin-top: 8px;
 }
 
+.btn-editar {
+  background-color: #4a90d9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-editar:hover {
+  background-color: #357abd;
+}
+
 .btn-submit:hover {
   background-color: #357abd;
 }
@@ -461,7 +476,7 @@ fieldset legend {
 }
 
 .logo-faculdade {
-  width: 100px;
+  width: 200px;
   margin-bottom: 20px;
 }
 
