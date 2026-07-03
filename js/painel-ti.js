@@ -5,6 +5,7 @@ const filtroStatus = document.querySelector("#filtro-status");
 
 let salasDisponiveis = [];
 let dispositivosDisponiveis = [];
+let periodosDisponiveis = [];
 
 fetch("https://reservetech-backend.onrender.com/usuarios/me", {
   headers: { Authorization: "Bearer " + token },
@@ -29,6 +30,14 @@ fetch("https://reservetech-backend.onrender.com/dispositivos", {
   .then((r) => r.json())
   .then((p) => {
     dispositivosDisponiveis = p.content;
+  });
+
+fetch("https://reservetech-backend.onrender.com/periodos", {
+  headers: { Authorization: "Bearer " + token },
+})
+  .then((r) => r.json())
+  .then((p) => {
+    periodosDisponiveis = p;
   });
 
 function carregarReservas(status) {
@@ -148,11 +157,31 @@ function abrirFormularioEdicao(card, reserva, filtroAtual) {
   inputData.style.cssText =
     "width:100%; padding:8px; margin:6px 0; border:1px solid #ccc; border-radius:6px;";
 
-  // Horários
-  const selectInicio = criarSelectHorario();
-  selectInicio.value = reserva.horarioInicio.substring(0, 5);
-  const selectFim = criarSelectHorario();
-  selectFim.value = reserva.horarioFim.substring(0, 5);
+  // Período de aula
+  const selectPeriodo = document.createElement("select");
+  selectPeriodo.style.cssText =
+    "width:100%; padding:8px; margin:6px 0; border:1px solid #ccc; border-radius:6px;";
+  const opDefault = document.createElement("option");
+  opDefault.value = "";
+  opDefault.textContent = "Selecione um período...";
+  opDefault.disabled = true;
+  selectPeriodo.appendChild(opDefault);
+  periodosDisponiveis.forEach(function (p) {
+    const op = document.createElement("option");
+    op.value = JSON.stringify({ inicio: p.horarioInicio, fim: p.horarioFim });
+    op.textContent =
+      p.descricao +
+      " (" +
+      p.horarioInicio.substring(0, 5) +
+      " às " +
+      p.horarioFim.substring(0, 5) +
+      ")";
+    if (
+      p.horarioInicio.substring(0, 5) === reserva.horarioInicio.substring(0, 5)
+    )
+      op.selected = true;
+    selectPeriodo.appendChild(op);
+  });
 
   // Container de itens
   const containerItens = document.createElement("div");
@@ -198,8 +227,8 @@ function abrirFormularioEdicao(card, reserva, filtroAtual) {
       body: JSON.stringify({
         salaId: Number(selectSala.value),
         dataReserva: inputData.value,
-        horarioInicio: selectInicio.value + ":00",
-        horarioFim: selectFim.value + ":00",
+        horarioInicio: JSON.parse(selectPeriodo.value).inicio,
+        horarioFim: JSON.parse(selectPeriodo.value).fim,
         itens: itens,
       }),
     })
@@ -230,10 +259,8 @@ function abrirFormularioEdicao(card, reserva, filtroAtual) {
   card.appendChild(selectSala);
   card.appendChild(document.createTextNode("Data:"));
   card.appendChild(inputData);
-  card.appendChild(document.createTextNode("Início:"));
-  card.appendChild(selectInicio);
-  card.appendChild(document.createTextNode("Fim:"));
-  card.appendChild(selectFim);
+  card.appendChild(document.createTextNode("Período:"));
+  card.appendChild(selectPeriodo);
   card.appendChild(document.createTextNode("Itens:"));
   card.appendChild(containerItens);
   card.appendChild(btnAddItem);
