@@ -174,8 +174,7 @@ fieldset legend {
   font-size: 14px;
   cursor: pointer;
   flex-shrink: 0;
-  margin-left: 2px;
-  margin-top: 5px;
+  margin: 2px 2px;
   font-weight: bold;
 }
 
@@ -257,6 +256,8 @@ fieldset legend {
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 12px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .card-reserva .status {
@@ -288,6 +289,7 @@ fieldset legend {
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   margin-top: 16px;
+  align-items: start;
 }
 
 .coluna-titulo {
@@ -405,6 +407,37 @@ fieldset legend {
   background-color: #357abd;
 }
 
+.btn-confirmar {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-confirmar:hover {
+  background-color: #1e8449;
+}
+
+.btn-reverter-para-pendente {
+  background-color: #7f8c8d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.btn-reverter-para-pendente:hover {
+  background-color: #7f8c8d;
+}
+
 .secao-painel {
   margin-top: 24px;
 }
@@ -446,7 +479,7 @@ fieldset legend {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 40px;
   width: 100%;
-  max-width: 600px;
+  max-width: 960px;
 }
 
 .container-coleta-formulario h2 {

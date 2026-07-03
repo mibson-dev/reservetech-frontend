@@ -74,18 +74,21 @@ function criarCard(reserva) {
     .map(function (item) {
       return item.nomeDispositivo + " (x" + item.quantidadeReservada + ")";
     })
-    .join(", ");
+    .join("<br>");
 
   card.innerHTML =
-    "<strong>" +
+    "<strong>Sala:</strong> " +
     reserva.nomeSala +
-    "</strong> — " +
+    "<br>" +
+    "<strong>Data:</strong> " +
     reserva.dataReserva +
-    " " +
+    "<br>" +
+    "<strong>Horário:</strong> " +
     reserva.horarioInicio.substring(0, 5) +
     " às " +
     reserva.horarioFim.substring(0, 5) +
-    "<br>Itens: " +
+    "<br>" +
+    "<strong>Dispositivos:</strong><br>" +
     itensTexto +
     '<br><span class="status status-' +
     reserva.status.toLowerCase() +

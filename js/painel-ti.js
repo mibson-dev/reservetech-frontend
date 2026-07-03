@@ -6,7 +6,7 @@ const filtroStatus = document.querySelector("#filtro-status");
 let salasDisponiveis = [];
 let dispositivosDisponiveis = [];
 
-fetch("http://localhost:8080/usuarios/me", {
+fetch("https://reservetech-backend.onrender.com/usuarios/me", {
   headers: { Authorization: "Bearer " + token },
 })
   .then(function (response) {
@@ -15,9 +15,7 @@ fetch("http://localhost:8080/usuarios/me", {
   .then(function (usuario) {
     saudacao.textContent = "Bem-vindo, " + usuario.nome + "!";
   });
-
-// Carrega salas e dispositivos pra usar no formulário de edição
-fetch("http://localhost:8080/salas", {
+fetch("https://reservetech-backend.onrender.com/salas", {
   headers: { Authorization: "Bearer " + token },
 })
   .then((r) => r.json())
@@ -25,7 +23,7 @@ fetch("http://localhost:8080/salas", {
     salasDisponiveis = p.content;
   });
 
-fetch("http://localhost:8080/dispositivos", {
+fetch("https://reservetech-backend.onrender.com/dispositivos", {
   headers: { Authorization: "Bearer " + token },
 })
   .then((r) => r.json())
@@ -34,7 +32,7 @@ fetch("http://localhost:8080/dispositivos", {
   });
 
 function carregarReservas(status) {
-  let url = "http://localhost:8080/reservas";
+  let url = "https://reservetech-backend.onrender.com/reservas";
   if (status && status !== "todas") {
     url += "?status=" + status;
   }
@@ -85,11 +83,10 @@ function carregarReservas(status) {
         const br = document.createElement("br");
         card.appendChild(br);
 
-        // Botão editar — disponível em PENDENTE e CONFIRMADA
         if (reserva.status === "PENDENTE" || reserva.status === "CONFIRMADA") {
           const btnEditar = document.createElement("button");
           btnEditar.textContent = "Editar";
-          btnEditar.className = "btn-secundario";
+          btnEditar.className = "btn-editar";
           btnEditar.addEventListener("click", function () {
             abrirFormularioEdicao(card, reserva, status);
           });
@@ -99,7 +96,7 @@ function carregarReservas(status) {
         if (reserva.status === "PENDENTE") {
           const btnConfirmar = document.createElement("button");
           btnConfirmar.textContent = "Confirmar";
-          btnConfirmar.className = "btn-secundario";
+          btnConfirmar.className = "btn-confirmar";
           btnConfirmar.addEventListener("click", function () {
             atualizarStatus(reserva.id, "CONFIRMADA", status);
           });
@@ -120,7 +117,7 @@ function carregarReservas(status) {
         if (reserva.status === "CONFIRMADA") {
           const btnReverter = document.createElement("button");
           btnReverter.textContent = "Reverter para Pendente";
-          btnReverter.className = "btn-secundario";
+          btnReverter.className = "btn-reverter-para-pendente";
           btnReverter.addEventListener("click", function () {
             atualizarStatus(reserva.id, "PENDENTE", status);
           });
@@ -192,7 +189,7 @@ function abrirFormularioEdicao(card, reserva, filtroAtual) {
       };
     });
 
-    fetch("http://localhost:8080/reservas/" + reserva.id, {
+    fetch("https://reservetech-backend.onrender.com/reservas/" + reserva.id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -298,7 +295,7 @@ function criarLinhaItem(dispositivoId, quantidade) {
 }
 
 function atualizarStatus(reservaId, novoStatus, filtroAtual) {
-  fetch("http://localhost:8080/reservas/" + reservaId, {
+  fetch("https://reservetech-backend.onrender.com/reservas/" + reservaId, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
