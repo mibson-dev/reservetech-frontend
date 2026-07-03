@@ -101,7 +101,6 @@ form.addEventListener("submit", function (evento) {
   const horarioInicio = document.querySelector("#horario-inicio").value;
   const horarioFim = document.querySelector("#horario-fim").value;
 
-  // Validação 1: Data retroativa
   const dataAtual = new Date();
   dataAtual.setHours(0, 0, 0, 0);
   const dataEscolhida = new Date(data + "T00:00:00");
@@ -111,7 +110,6 @@ form.addEventListener("submit", function (evento) {
     return;
   }
 
-  // Validação 2: Horário de fim inválido
   if (horarioFim <= horarioInicio) {
     mensagemErro.textContent =
       "O horário de término deve ser posterior ao horário de início.";

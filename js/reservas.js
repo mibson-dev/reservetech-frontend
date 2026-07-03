@@ -1,139 +1,103 @@
 const token = localStorage.getItem("token");
 const saudacao = document.querySelector("#saudacao");
 const filtro = document.querySelector("#filtro");
-const listaReservas = document.querySelector("#lista-reservas");
 
-let todasReservas = [];
-let usuarioLogadoId = null;
-
-fetch("https://reservetech-backend.onrender.com/usuarios/me", {
+// Busca dados do usuário logado para exibir a saudação
+fetch("http://localhost:8080/usuarios/me", {
   headers: { Authorization: "Bearer " + token },
 })
   .then(function (response) {
     return response.json();
   })
   .then(function (usuario) {
-    saudacao.textContent = "Bem-vindo, " + usuario.nome + "!";
-    usuarioLogadoId = usuario.id;
-    carregarReservas();
+    const perfilTexto =
+      usuario.perfil === "PROFESSOR" ? "Professor" : "Equipe TI";
+    saudacao.textContent =
+      "Bem-vindo, " + perfilTexto + " " + usuario.nome + "!";
   });
 
-function carregarReservas() {
-  listaReservas.innerHTML = "<p>Carregando reservas...</p>";
+function carregarReservas(periodo) {
+  let url = "http://localhost:8080/reservas/minhas";
+  if (periodo && periodo !== "todas") {
+    url += "?periodo=" + periodo;
+  }
 
-  fetch(
-    "https://reservetech-backend.onrender.com/reservas/usuario/" +
-      usuarioLogadoId,
-    {
-      headers: { Authorization: "Bearer " + token },
-    },
-  )
+  fetch(url, {
+    headers: { Authorization: "Bearer " + token },
+  })
     .then(function (response) {
       return response.json();
     })
     .then(function (pagina) {
-      todasReservas = pagina.content;
-      renderizarReservas();
+      const listaPendentes = document.querySelector("#lista-pendentes");
+      const listaConfirmadas = document.querySelector("#lista-confirmadas");
+      listaPendentes.innerHTML = "";
+      listaConfirmadas.innerHTML = "";
+
+      if (pagina.content.length === 0) {
+        listaPendentes.innerHTML =
+          "<p style='color:#999; font-size:14px;'>Nenhuma reserva pendente.</p>";
+        listaConfirmadas.innerHTML =
+          "<p style='color:#999; font-size:14px;'>Nenhuma reserva confirmada.</p>";
+        return;
+      }
+
+      const pendentes = pagina.content
+        .filter((r) => r.status === "PENDENTE")
+        .sort((a, b) => new Date(a.dataReserva) - new Date(b.dataReserva));
+
+      const confirmadas = pagina.content
+        .filter((r) => r.status === "CONFIRMADA")
+        .sort((a, b) => new Date(a.dataReserva) - new Date(b.dataReserva));
+
+      if (pendentes.length === 0) {
+        listaPendentes.innerHTML =
+          "<p style='color:#999; font-size:14px;'>Nenhuma reserva pendente.</p>";
+      } else {
+        pendentes.forEach((r) => listaPendentes.appendChild(criarCard(r)));
+      }
+
+      if (confirmadas.length === 0) {
+        listaConfirmadas.innerHTML =
+          "<p style='color:#999; font-size:14px;'>Nenhuma reserva confirmada.</p>";
+      } else {
+        confirmadas.forEach((r) => listaConfirmadas.appendChild(criarCard(r)));
+      }
     });
 }
 
-filtro.addEventListener("change", renderizarReservas);
+function criarCard(reserva) {
+  const card = document.createElement("div");
+  card.className = "card-reserva";
 
-function renderizarReservas() {
-  listaReservas.innerHTML = "";
-  const periodo = filtro.value;
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
+  const itensTexto = reserva.itens
+    .map(function (item) {
+      return item.nomeDispositivo + " (x" + item.quantidadeReservada + ")";
+    })
+    .join(", ");
 
-  const reservasFiltradas = todasReservas.filter(function (reserva) {
-    if (periodo === "todas") return true;
+  card.innerHTML =
+    "<strong>" +
+    reserva.nomeSala +
+    "</strong> — " +
+    reserva.dataReserva +
+    " " +
+    reserva.horarioInicio.substring(0, 5) +
+    " às " +
+    reserva.horarioFim.substring(0, 5) +
+    "<br>Itens: " +
+    itensTexto +
+    '<br><span class="status status-' +
+    reserva.status.toLowerCase() +
+    '">' +
+    reserva.status +
+    "</span>";
 
-    const dataReserva = new Date(reserva.dataReserva + "T00:00:00");
-    const diffTempo = dataReserva.getTime() - hoje.getTime();
-    const diffDias = Math.ceil(diffTempo / (1000 * 3600 * 24));
-
-    if (periodo === "hoje") {
-      return diffDias === 0;
-    }
-    if (periodo === "semana") {
-      return diffDias >= 0 && diffDias <= 7;
-    }
-    if (periodo === "mes") {
-      return (
-        dataReserva.getMonth() === hoje.getMonth() &&
-        dataReserva.getFullYear() === hoje.getFullYear()
-      );
-    }
-    if (periodo === "semestre") {
-      return diffDias >= -180 && diffDias <= 180;
-    }
-
-    return true;
-  });
-
-  if (reservasFiltradas.length === 0) {
-    listaReservas.innerHTML =
-      "<p>Nenhuma reserva encontrada para este filtro.</p>";
-    return;
-  }
-
-  reservasFiltradas.forEach(function (reserva) {
-    const card = document.createElement("div");
-    card.className = "card-reserva";
-
-    const itensTexto = reserva.itens
-      .map(function (item) {
-        return item.nomeDispositivo + " (x" + item.quantidadeReservada + ")";
-      })
-      .join(", ");
-
-    card.innerHTML =
-      "<strong>Sala: " +
-      reserva.nomeSala +
-      "</strong><br>" +
-      "Data: " +
-      reserva.dataReserva +
-      " — " +
-      reserva.horarioInicio.substring(0, 5) +
-      " às " +
-      reserva.horarioFim.substring(0, 5) +
-      "<br>Itens: " +
-      itensTexto +
-      '<br><span class="status status-' +
-      reserva.status.toLowerCase() +
-      '">' +
-      reserva.status +
-      "</span>";
-
-    if (reserva.status === "PENDENTE") {
-      const btnCancelar = document.createElement("button");
-      btnCancelar.textContent = "Cancelar";
-      btnCancelar.className = "btn-remover-item";
-      btnCancelar.style.width = "auto";
-      btnCancelar.style.padding = "6px 12px";
-      btnCancelar.style.marginTop = "10px";
-      btnCancelar.addEventListener("click", function () {
-        if (confirm("Deseja realmente cancelar esta reserva?")) {
-          cancelarReserva(reserva.id);
-        }
-      });
-      card.appendChild(document.createElement("br"));
-      card.appendChild(btnCancelar);
-    }
-
-    listaReservas.appendChild(card);
-  });
+  return card;
 }
 
-function cancelarReserva(reservaId) {
-  fetch("https://reservetech-backend.onrender.com/reservas/" + reservaId, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify({ status: "CANCELADA" }),
-  }).then(function () {
-    carregarReservas();
-  });
-}
+filtro.addEventListener("change", function () {
+  carregarReservas(filtro.value);
+});
+
+carregarReservas("todas");

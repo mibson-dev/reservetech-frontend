@@ -27,13 +27,21 @@
               <option value="semestre">Últimos 6 meses</option>
             </select>
           </div>
-
           <a href="nova-reserva.html" class="btn-submit btn-link"
             >+ Nova Reserva</a
           >
         </div>
 
-        <div id="lista-reservas"></div>
+        <div class="duas-colunas">
+          <div>
+            <h3 class="coluna-titulo coluna-pendente">Pendentes</h3>
+            <div id="lista-pendentes"></div>
+          </div>
+          <div>
+            <h3 class="coluna-titulo coluna-confirmada">Confirmadas</h3>
+            <div id="lista-confirmadas"></div>
+          </div>
+        </div>
       </div>
     </main>
 

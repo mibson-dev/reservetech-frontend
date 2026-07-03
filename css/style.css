@@ -244,7 +244,37 @@ fieldset legend {
   color: #721c24;
 }
 
-/* ===== DASHBOARD ===== */
+/* ===== DUAS COLUNAS DASHBOARD ===== */
+.duas-colunas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.coluna-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.coluna-pendente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.coluna-confirmada {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+@media (max-width: 600px) {
+  .duas-colunas {
+    grid-template-columns: 1fr;
+  }
+}
 .barra-acoes {
   display: flex;
   justify-content: space-between;
@@ -274,18 +304,14 @@ fieldset legend {
 
 .link-voltar {
   display: inline-block;
-  color: #004085;
-  border: 1px solid #004085;
-  padding: 6px 12px;
+  color: #4a90d9;
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 16px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
 }
 
 .link-voltar:hover {
-  background-color: #e2e6ea;
+  text-decoration: underline;
 }
 
 /* ===== HEADER COM AÇÃO (LOGOUT) ===== */
@@ -327,6 +353,11 @@ fieldset legend {
   padding: 16px;
   border-radius: 8px;
   font-weight: 600;
+}
+.botao-central {
+  grid-column: 1 / -1;
+  width: 220px;
+  margin: 0 auto;
 }
 
 .botao-painel:hover {
@@ -381,102 +412,4 @@ fieldset legend {
   font-size: 24px;
   margin-bottom: 24px;
   text-align: center;
-}
-
-/* ===== NOVOS BOTÕES ===== */
-.btn-confirmar-painel {
-  background-color: #4a90d9;
-  color: white;
-  border: 1px solid white;
-  font-weight: normal;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-confirmar-painel:hover {
-  background-color: #357abd;
-}
-
-.btn-editar {
-  background-color: #4a90d9;
-  color: white;
-  border: 1px solid white;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: normal;
-}
-
-.btn-editar:hover {
-  background-color: #357abd;
-}
-
-.botao-central {
-  grid-column: 1 / -1;
-  justify-self: center;
-  min-width: 220px;
-}
-
-/* ===== TELA DE ABERTURA (INDEX.HTML) ===== */
-.body-index {
-  background-image: url("/img/fundo-2.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  margin: 0;
-}
-
-.overlay-fosco {
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.container-abertura {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 50px 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
-  width: 90%;
-  color: #ffffff;
-}
-
-.logo-faculdade {
-  max-width: 200px;
-  margin-bottom: 24px;
-}
-
-.container-abertura h1 {
-  font-size: 36px;
-  margin-bottom: 12px;
-  color: #ffffff;
-}
-
-.container-abertura p {
-  font-size: 18px;
-  margin-bottom: 32px;
-  color: #e0e0e0;
-}
-
-.btn-acessar {
-  display: inline-block;
-  text-decoration: none;
-  padding: 14px 28px;
-  font-size: 18px;
-  width: auto;
-  transition: background-color 0.3s ease;
 }
