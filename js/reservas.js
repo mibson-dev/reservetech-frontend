@@ -3,7 +3,7 @@ const saudacao = document.querySelector("#saudacao");
 const filtro = document.querySelector("#filtro");
 
 // Busca dados do usuário logado para exibir a saudação
-fetch("http://localhost:8080/usuarios/me", {
+fetch("https://reservetech-backend.onrender.com/usuarios/me", {
   headers: { Authorization: "Bearer " + token },
 })
   .then(function (response) {
@@ -17,7 +17,7 @@ fetch("http://localhost:8080/usuarios/me", {
   });
 
 function carregarReservas(periodo) {
-  let url = "http://localhost:8080/reservas/minhas";
+  let url = "https://reservetech-backend.onrender.com/reservas/minhas";
   if (periodo && periodo !== "todas") {
     url += "?periodo=" + periodo;
   }
