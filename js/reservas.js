@@ -2,7 +2,6 @@ const token = localStorage.getItem("token");
 const saudacao = document.querySelector("#saudacao");
 const filtro = document.querySelector("#filtro");
 
-// Busca dados do usuário logado para exibir a saudação
 fetch("https://reservetech-backend.onrender.com/usuarios/me", {
   headers: { Authorization: "Bearer " + token },
 })
