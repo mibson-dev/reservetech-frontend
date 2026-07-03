@@ -148,12 +148,21 @@ fieldset legend {
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 12px 20px;
+  padding: 6px 20px;
   font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-top: 8px;
+  font-weight: bold;
+}
+
+.btn-submit:hover {
+  background-color: #357abd;
+}
+
+.btn-submit:disabled {
+  background-color: #a0bcd9;
+  cursor: not-allowed;
 }
 
 .btn-editar {
@@ -164,20 +173,28 @@ fieldset legend {
   padding: 6px 14px;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  flex-shrink: 0;
+  margin-left: 2px;
+  margin-top: 5px;
+  font-weight: bold;
 }
 
 .btn-editar:hover {
   background-color: #357abd;
 }
 
-.btn-submit:hover {
-  background-color: #357abd;
-}
-
-.btn-submit:disabled {
-  background-color: #a0bcd9;
-  cursor: not-allowed;
+.btn-cancelar {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 2px;
+  margin-top: 8px;
+  font-weight: bold;
 }
 
 /* ===== BOTÃO SECUNDÁRIO E ITENS DINÂMICOS ===== */
@@ -217,11 +234,17 @@ fieldset legend {
   color: white;
   border: none;
   border-radius: 6px;
-  width: 32px;
-  height: 32px;
+  padding: 6px 14px;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 16px;
   flex-shrink: 0;
+  margin-left: 2px;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+.btn-remover-item:hover {
+  background-color: #c9302c;
 }
 
 .btn-remover-item:hover {
@@ -320,6 +343,9 @@ fieldset legend {
 .link-voltar {
   display: inline-block;
   color: #4a90d9;
+  border: black solid 1px;
+  border-radius: 5px;
+  padding: 3px;
   text-decoration: none;
   font-size: 14px;
   margin-bottom: 16px;
