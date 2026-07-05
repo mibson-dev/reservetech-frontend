@@ -1,6 +1,7 @@
 const token = localStorage.getItem("token");
 const selectSala = document.querySelector("#sala");
-const selectPeriodo = document.querySelector("#periodo");
+const selectInicio = document.querySelector("#horario-inicio");
+const selectFim = document.querySelector("#horario-fim");
 const listaItens = document.querySelector("#lista-itens");
 const btnAdicionarItem = document.querySelector("#btn-adicionar-item");
 const form = document.querySelector("#form-reserva");
@@ -25,22 +26,25 @@ fetch(API + "/salas", { headers: { Authorization: "Bearer " + token } })
 fetch(API + "/periodos", { headers: { Authorization: "Bearer " + token } })
   .then((r) => r.json())
   .then(function (periodos) {
-    selectPeriodo.innerHTML =
-      '<option value="" disabled selected>Selecione um período...</option>';
+    selectInicio.innerHTML =
+      '<option value="" disabled selected>Selecione o início...</option>';
+    selectFim.innerHTML =
+      '<option value="" disabled selected>Selecione o fim...</option>';
+
     periodos.forEach(function (periodo) {
-      const op = document.createElement("option");
-      op.value = JSON.stringify({
-        inicio: periodo.horarioInicio,
-        fim: periodo.horarioFim,
-      });
-      op.textContent =
-        periodo.descricao +
-        " (" +
-        periodo.horarioInicio.substring(0, 5) +
-        " às " +
-        periodo.horarioFim.substring(0, 5) +
-        ")";
-      selectPeriodo.appendChild(op);
+      // Select de início — mostra horário de início de cada período
+      const opInicio = document.createElement("option");
+      opInicio.value = periodo.horarioInicio;
+      opInicio.textContent =
+        periodo.descricao + " — " + periodo.horarioInicio.substring(0, 5);
+      selectInicio.appendChild(opInicio);
+
+      // Select de fim — mostra horário de fim de cada período
+      const opFim = document.createElement("option");
+      opFim.value = periodo.horarioFim;
+      opFim.textContent =
+        periodo.descricao + " — " + periodo.horarioFim.substring(0, 5);
+      selectFim.appendChild(opFim);
     });
   });
 
@@ -94,10 +98,16 @@ form.addEventListener("submit", function (evento) {
 
   const salaId = selectSala.value;
   const data = document.querySelector("#data").value;
-  const periodoSelecionado = selectPeriodo.value;
+  const horarioInicio = selectInicio.value;
+  const horarioFim = selectFim.value;
 
-  if (!periodoSelecionado) {
-    mensagemErro.textContent = "Selecione um período de aula.";
+  if (!horarioInicio || !horarioFim) {
+    mensagemErro.textContent = "Selecione o horário de início e fim.";
+    return;
+  }
+
+  if (horarioInicio >= horarioFim) {
+    mensagemErro.textContent = "O horário de fim deve ser depois do início.";
     return;
   }
 
@@ -109,8 +119,6 @@ form.addEventListener("submit", function (evento) {
     mensagemErro.textContent = "Não é possível selecionar uma data no passado.";
     return;
   }
-
-  const horarios = JSON.parse(periodoSelecionado);
 
   const linhas = document.querySelectorAll(".linha-item");
   const itens = Array.from(linhas).map(function (linha) {
@@ -125,8 +133,8 @@ form.addEventListener("submit", function (evento) {
   const dadosReserva = {
     salaId: Number(salaId),
     dataReserva: data,
-    horarioInicio: horarios.inicio,
-    horarioFim: horarios.fim,
+    horarioInicio: horarioInicio,
+    horarioFim: horarioFim,
     itens: itens,
   };
 
