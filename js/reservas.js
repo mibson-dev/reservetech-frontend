@@ -99,7 +99,55 @@ function criarCard(reserva) {
     "<strong>Dispositivos:</strong><br>" +
     itensTexto;
 
+  // Botão de cancelar: só aparece se a reserva não está cancelada
+  // e o horário de início ainda não passou
+  if (reserva.status !== "CANCELADA") {
+    const inicioReserva = new Date(
+      reserva.dataReserva + "T" + reserva.horarioInicio,
+    );
+    const agora = new Date();
+
+    if (agora < inicioReserva) {
+      const btnCancelar = document.createElement("button");
+      btnCancelar.textContent = "Cancelar reserva";
+      btnCancelar.className = "btn-cancelar";
+      btnCancelar.style.marginTop = "12px";
+      btnCancelar.addEventListener("click", function () {
+        cancelarReserva(reserva.id);
+      });
+      card.appendChild(document.createElement("br"));
+      card.appendChild(btnCancelar);
+    }
+  }
+
   return card;
+}
+
+function cancelarReserva(id) {
+  if (!confirm("Tem certeza que deseja cancelar esta reserva?")) return;
+
+  fetch(
+    "https://reservetech-backend.onrender.com/reservas/" + id + "/cancelar",
+    {
+      method: "PATCH",
+      headers: { Authorization: "Bearer " + token },
+    },
+  )
+    .then(function (response) {
+      if (!response.ok) {
+        return response.json().then(function (erro) {
+          throw new Error(erro.mensagem || "Erro ao cancelar reserva.");
+        });
+      }
+      return response.json();
+    })
+    .then(function () {
+      alert("Reserva cancelada com sucesso.");
+      carregarReservas(filtro.value);
+    })
+    .catch(function (erro) {
+      alert(erro.message);
+    });
 }
 
 filtro.addEventListener("change", function () {
