@@ -158,9 +158,10 @@ function carregarReservas(url) {
           .join("/");
 
         card.innerHTML =
-          "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
-          "<strong>Professor:</strong>&nbsp;" +
+          "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:12px;'>" +
+          "<span><strong>Professor:</strong> " +
           reserva.nomeUsuario +
+          "</span>" +
           '<span class="status status-' +
           reserva.status.toLowerCase() +
           '">' +

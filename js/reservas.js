@@ -75,10 +75,13 @@ function criarCard(reserva) {
     })
     .join("<br>");
 
+  const dataFormatada = reserva.dataReserva.split("-").reverse().join("/");
+
   card.innerHTML =
-    "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
-    "<strong>Sala:</strong>&nbsp;" +
+    "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:12px;'>" +
+    "<span><strong>Sala:</strong> " +
     reserva.nomeSala +
+    "</span>" +
     '<span class="status status-' +
     reserva.status.toLowerCase() +
     '">' +
@@ -86,7 +89,7 @@ function criarCard(reserva) {
     "</span>" +
     "</div>" +
     "<strong>Data:</strong> " +
-    reserva.dataReserva +
+    dataFormatada +
     "<br>" +
     "<strong>Horário:</strong> " +
     reserva.horarioInicio.substring(0, 5) +

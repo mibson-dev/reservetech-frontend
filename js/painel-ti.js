@@ -68,27 +68,36 @@ function carregarReservas(status) {
               item.nomeDispositivo + " (x" + item.quantidadeReservada + ")"
             );
           })
-          .join(", ");
+          .join("<br>");
+
+        const dataFormatada = reserva.dataReserva
+          .split("-")
+          .reverse()
+          .join("/");
 
         card.innerHTML =
-          "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
-          "<strong>" +
+          "<div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:12px;'>" +
+          "<span><strong>Professor:</strong> " +
           reserva.nomeUsuario +
-          "</strong>" +
+          "</span>" +
           '<span class="status status-' +
           reserva.status.toLowerCase() +
           '">' +
           reserva.status +
           "</span>" +
           "</div>" +
+          "<strong>Sala:</strong> " +
           reserva.nomeSala +
-          " — " +
-          reserva.dataReserva +
-          " " +
+          "<br>" +
+          "<strong>Data:</strong> " +
+          dataFormatada +
+          "<br>" +
+          "<strong>Horário:</strong> " +
           reserva.horarioInicio.substring(0, 5) +
           " às " +
           reserva.horarioFim.substring(0, 5) +
-          "<br>Itens: " +
+          "<br>" +
+          "<strong>Itens:</strong><br>" +
           itensTexto;
 
         const br = document.createElement("br");

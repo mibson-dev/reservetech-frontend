@@ -15,6 +15,19 @@
       <div class="container-acessar-conta">
         <h2>Acessar Conta</h2>
 
+        <div
+          id="mensagem-sessao"
+          style="
+            display: none;
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 16px;
+          "
+        ></div>
+
         <form id="form-login">
           <div class="coleta-dados">
             <label for="email">E-mail</label>
@@ -47,6 +60,15 @@
       </div>
     </main>
 
+    <script>
+      const mensagemSessao = sessionStorage.getItem("mensagemLogin");
+      if (mensagemSessao) {
+        sessionStorage.removeItem("mensagemLogin");
+        const container = document.querySelector("#mensagem-sessao");
+        container.textContent = mensagemSessao;
+        container.style.display = "block";
+      }
+    </script>
     <script src="js/login.js"></script>
   </body>
 </html>

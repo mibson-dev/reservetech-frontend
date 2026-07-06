@@ -27,6 +27,8 @@ form.addEventListener("submit", function (evento) {
     })
     .then(function (token) {
       localStorage.setItem("token", token);
+      localStorage.setItem("loginTimestamp", Date.now().toString());
+      localStorage.setItem("ultimaAtividade", Date.now().toString());
 
       fetch("https://reservetech-backend.onrender.com/usuarios/me", {
         headers: { Authorization: "Bearer " + token },
