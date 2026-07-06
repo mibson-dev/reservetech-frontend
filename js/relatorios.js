@@ -143,20 +143,29 @@ function carregarReservas(url) {
               item.nomeDispositivo + " (x" + item.quantidadeReservada + ")"
             );
           })
-          .join(", ");
+          .join("<br>");
+
+        const dataFormatada = reserva.dataReserva
+          .split("-")
+          .reverse()
+          .join("/");
 
         card.innerHTML =
-          "<strong>" +
+          "<strong>Professor:</strong> " +
           reserva.nomeUsuario +
-          "</strong> — " +
+          "<br>" +
+          "<strong>Sala:</strong> " +
           reserva.nomeSala +
-          " — " +
-          reserva.dataReserva +
-          " " +
+          "<br>" +
+          "<strong>Data:</strong> " +
+          dataFormatada +
+          "<br>" +
+          "<strong>Horário:</strong> " +
           reserva.horarioInicio.substring(0, 5) +
           " às " +
           reserva.horarioFim.substring(0, 5) +
-          "<br>Itens: " +
+          "<br>" +
+          "<strong>Itens:</strong><br>" +
           itensTexto +
           '<br><span class="status status-' +
           reserva.status.toLowerCase() +
