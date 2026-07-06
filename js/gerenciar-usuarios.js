@@ -2,7 +2,7 @@ const token = localStorage.getItem("token");
 const listaUsuarios = document.querySelector("#lista-usuarios");
 
 function carregarUsuarios() {
-  fetch("http://localhost:8080/usuarios", {
+  fetch("https://reservetech-backend.onrender.com/usuarios", {
     headers: { Authorization: "Bearer " + token },
   })
     .then(function (response) {
@@ -132,7 +132,7 @@ function abrirEdicao(card, usuario) {
 }
 
 function salvarEdicao(id, dados) {
-  fetch("http://localhost:8080/usuarios/" + id, {
+  fetch("https://reservetech-backend.onrender.com/usuarios/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -154,7 +154,7 @@ function salvarEdicao(id, dados) {
 }
 
 function deletarUsuario(id) {
-  fetch("http://localhost:8080/usuarios/" + id, {
+  fetch("https://reservetech-backend.onrender.com/usuarios/" + id, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
   })

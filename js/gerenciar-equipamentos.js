@@ -2,7 +2,7 @@ const token = localStorage.getItem("token");
 const listaEquipamentos = document.querySelector("#lista-equipamentos");
 
 function carregarEquipamentos() {
-  fetch("http://localhost:8080/dispositivos", {
+  fetch("https://reservetech-backend.onrender.com/dispositivos", {
     headers: { Authorization: "Bearer " + token },
   })
     .then(function (response) {
@@ -142,7 +142,7 @@ function abrirEdicao(card, equipamento) {
 }
 
 function salvarEdicao(id, dados) {
-  fetch("http://localhost:8080/dispositivos/" + id, {
+  fetch("https://reservetech-backend.onrender.com/dispositivos/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -155,7 +155,7 @@ function salvarEdicao(id, dados) {
 }
 
 function deletarEquipamento(id) {
-  fetch("http://localhost:8080/dispositivos/" + id, {
+  fetch("https://reservetech-backend.onrender.com/dispositivos/" + id, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
   })
