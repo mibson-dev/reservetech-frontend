@@ -58,28 +58,32 @@ function iniciarMonitoramentoSessao() {
   const displayTimer = document.querySelector("#timer-sessao");
 
   intervalTimer = setInterval(function () {
-    const restante = calcularTempoRestante();
+    const agora = Date.now();
+    const loginEm = Number(localStorage.getItem("loginTimestamp"));
+    const ultimaAtividade = Number(localStorage.getItem("ultimaAtividade"));
+
+    const tempoRestanteSessao = DURACAO_SESSAO_MS - (agora - loginEm);
+    const tempoInativo = agora - ultimaAtividade;
 
     if (displayTimer) {
-      displayTimer.textContent = formatarTempo(restante);
+      displayTimer.textContent =
+        "Tempo de sessão: " + formatarTempo(tempoRestanteSessao);
     }
 
-    if (restante <= 0) {
+    if (tempoInativo >= LIMITE_INATIVIDADE_MS) {
       clearInterval(intervalTimer);
+      logout("Você foi desconectado por inatividade.");
+      return;
+    }
 
-      const agora = Date.now();
-      const ultimaAtividade = Number(localStorage.getItem("ultimaAtividade"));
-      const expirouPorInatividade =
-        agora - ultimaAtividade >= LIMITE_INATIVIDADE_MS;
-
-      if (expirouPorInatividade) {
-        logout("Você foi desconectado por inatividade.");
-      } else {
-        logout("Sua sessão expirou. Por favor, faça login novamente.");
-      }
+    if (tempoRestanteSessao <= 0) {
+      clearInterval(intervalTimer);
+      logout("Sua sessão expirou. Por favor, faça login novamente.");
+      return;
     }
   }, 1000);
 
+  // Eventos que contam como "atividade" do usuário
   ["click", "keydown", "mousemove", "scroll"].forEach(function (evento) {
     document.addEventListener(evento, registrarAtividade, { passive: true });
   });
