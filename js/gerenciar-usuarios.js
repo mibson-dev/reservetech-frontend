@@ -2,7 +2,7 @@ const token = localStorage.getItem("token");
 const listaUsuarios = document.querySelector("#lista-usuarios");
 
 function carregarUsuarios() {
-  fetch("https://reservetech-backend.onrender.com/usuarios", {
+  fetch("http://localhost:8080/usuarios", {
     headers: { Authorization: "Bearer " + token },
   })
     .then(function (response) {
@@ -132,7 +132,7 @@ function abrirEdicao(card, usuario) {
 }
 
 function salvarEdicao(id, dados) {
-  fetch("https://reservetech-backend.onrender.com/usuarios/" + id, {
+  fetch("http://localhost:8080/usuarios/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -154,12 +154,26 @@ function salvarEdicao(id, dados) {
 }
 
 function deletarUsuario(id) {
-  fetch("https://reservetech-backend.onrender.com/usuarios/" + id, {
+  fetch("http://localhost:8080/usuarios/" + id, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
-  }).then(function () {
-    carregarUsuarios();
-  });
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        if (response.status === 500 || response.status === 409) {
+          throw new Error(
+            "Este usuário não pode ser excluído porque já possui reservas vinculadas.",
+          );
+        }
+        return response.json().then((erro) => {
+          throw new Error(erro.mensagem || "Erro ao excluir usuário.");
+        });
+      }
+      carregarUsuarios();
+    })
+    .catch(function (erro) {
+      alert(erro.message);
+    });
 }
 
 carregarUsuarios();

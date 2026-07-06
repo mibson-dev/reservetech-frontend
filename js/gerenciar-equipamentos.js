@@ -2,7 +2,7 @@ const token = localStorage.getItem("token");
 const listaEquipamentos = document.querySelector("#lista-equipamentos");
 
 function carregarEquipamentos() {
-  fetch("https://reservetech-backend.onrender.com/dispositivos", {
+  fetch("http://localhost:8080/dispositivos", {
     headers: { Authorization: "Bearer " + token },
   })
     .then(function (response) {
@@ -142,7 +142,7 @@ function abrirEdicao(card, equipamento) {
 }
 
 function salvarEdicao(id, dados) {
-  fetch("https://reservetech-backend.onrender.com/dispositivos/" + id, {
+  fetch("http://localhost:8080/dispositivos/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -155,12 +155,26 @@ function salvarEdicao(id, dados) {
 }
 
 function deletarEquipamento(id) {
-  fetch("https://reservetech-backend.onrender.com/dispositivos/" + id, {
+  fetch("http://localhost:8080/dispositivos/" + id, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
-  }).then(function () {
-    carregarEquipamentos();
-  });
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        if (response.status === 500 || response.status === 409) {
+          throw new Error(
+            "Este equipamento não pode ser excluído porque já possui reservas vinculadas.",
+          );
+        }
+        return response.json().then((erro) => {
+          throw new Error(erro.mensagem || "Erro ao excluir equipamento.");
+        });
+      }
+      carregarEquipamentos();
+    })
+    .catch(function (erro) {
+      alert(erro.message);
+    });
 }
 
 carregarEquipamentos();

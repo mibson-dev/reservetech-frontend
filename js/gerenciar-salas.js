@@ -97,7 +97,7 @@ function abrirEdicao(card, sala) {
 
   const btnCancelar = document.createElement("button");
   btnCancelar.textContent = "Cancelar";
-  btnCancelar.className = "btn-cancelar";
+  btnCancelar.className = "btn-secundario";
   btnCancelar.addEventListener("click", carregarSalas);
 
   divBotoes.appendChild(btnSalvar);
@@ -122,9 +122,23 @@ function deletarSala(id) {
   fetch("https://reservetech-backend.onrender.com/salas/" + id, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token },
-  }).then(function () {
-    carregarSalas();
-  });
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        if (response.status === 500 || response.status === 409) {
+          throw new Error(
+            "Esta sala não pode ser excluída porque já possui reservas vinculadas.",
+          );
+        }
+        return response.json().then((erro) => {
+          throw new Error(erro.mensagem || "Erro ao excluir sala.");
+        });
+      }
+      carregarSalas();
+    })
+    .catch(function (erro) {
+      alert(erro.message);
+    });
 }
 
 carregarSalas();
