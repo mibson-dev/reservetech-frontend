@@ -3,6 +3,10 @@ const selectTipoRelatorio = document.querySelector("#tipo-relatorio");
 const containerFiltroProfessor = document.querySelector(
   "#filtro-professor-container",
 );
+const containerFiltroData = document.querySelector("#filtro-data-container");
+const inputDataRelatorio = document.querySelector("#input-data-relatorio");
+const btnBuscarData = document.querySelector("#btn-buscar-data");
+const btnLimparData = document.querySelector("#btn-limpar-data");
 const selectProfessor = document.querySelector("#select-professor");
 const btnBuscarProfessor = document.querySelector("#btn-buscar-professor");
 const areaResultado = document.querySelector("#area-resultado-relatorio");
@@ -26,15 +30,20 @@ selectTipoRelatorio.addEventListener("change", function () {
 
   if (tipo === "reservas-professor") {
     containerFiltroProfessor.style.display = "block";
+    containerFiltroData.style.display = "none";
     areaResultado.innerHTML =
       "<p>Selecione um professor e clique em Buscar.</p>";
     carregarProfessores();
+  } else if (tipo === "reservas-todas") {
+    containerFiltroProfessor.style.display = "none";
+    containerFiltroData.style.display = "block";
+    inputDataRelatorio.value = "";
+    carregarReservas("https://reservetech-backend.onrender.com/reservas");
   } else {
     containerFiltroProfessor.style.display = "none";
+    containerFiltroData.style.display = "none";
 
-    if (tipo === "reservas-todas") {
-      carregarReservas("https://reservetech-backend.onrender.com/reservas");
-    } else if (tipo === "dispositivos-todos") {
+    if (tipo === "dispositivos-todos") {
       carregarDispositivos(
         "https://reservetech-backend.onrender.com/dispositivos",
       );
@@ -44,6 +53,27 @@ selectTipoRelatorio.addEventListener("change", function () {
       );
     }
   }
+});
+
+btnBuscarData.addEventListener("click", function () {
+  const data = inputDataRelatorio.value;
+  if (!data) {
+    alert("Selecione uma data primeiro.");
+    return;
+  }
+
+  nomeRelatorioAtual = "Reservas do dia " + data.split("-").reverse().join("/");
+  areaResultado.innerHTML = "<p>Carregando reservas...</p>";
+  carregarReservas(
+    "https://reservetech-backend.onrender.com/reservas?data=" + data,
+  );
+});
+
+btnLimparData.addEventListener("click", function () {
+  inputDataRelatorio.value = "";
+  nomeRelatorioAtual = "Todas as Reservas";
+  areaResultado.innerHTML = "<p>Carregando reservas...</p>";
+  carregarReservas("https://reservetech-backend.onrender.com/reservas");
 });
 
 btnBuscarProfessor.addEventListener("click", function () {
