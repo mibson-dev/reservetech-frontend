@@ -83,7 +83,6 @@ function iniciarMonitoramentoSessao() {
     }
   }, 1000);
 
-  // Eventos que contam como "atividade" do usuário
   ["click", "keydown", "mousemove", "scroll"].forEach(function (evento) {
     document.addEventListener(evento, registrarAtividade, { passive: true });
   });
