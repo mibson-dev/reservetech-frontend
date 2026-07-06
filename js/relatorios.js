@@ -117,6 +117,13 @@ function carregarReservas(url) {
     headers: { Authorization: "Bearer " + token },
   })
     .then(function (response) {
+      if (!response.ok) {
+        throw new Error(
+          "Não foi possível carregar as reservas (erro " +
+            response.status +
+            ").",
+        );
+      }
       return response.json();
     })
     .then(function (pagina) {
@@ -151,9 +158,15 @@ function carregarReservas(url) {
           .join("/");
 
         card.innerHTML =
-          "<strong>Professor:</strong> " +
+          "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
+          "<strong>Professor:</strong>&nbsp;" +
           reserva.nomeUsuario +
-          "<br>" +
+          '<span class="status status-' +
+          reserva.status.toLowerCase() +
+          '">' +
+          reserva.status +
+          "</span>" +
+          "</div>" +
           "<strong>Sala:</strong> " +
           reserva.nomeSala +
           "<br>" +
@@ -166,15 +179,16 @@ function carregarReservas(url) {
           reserva.horarioFim.substring(0, 5) +
           "<br>" +
           "<strong>Itens:</strong><br>" +
-          itensTexto +
-          '<br><span class="status status-' +
-          reserva.status.toLowerCase() +
-          '">' +
-          reserva.status +
-          "</span>";
+          itensTexto;
 
         areaResultado.appendChild(card);
       });
+    })
+    .catch(function (erro) {
+      areaResultado.innerHTML =
+        "<p style='color:#d9534f;'>" + erro.message + "</p>";
+      containerExportacao.style.display = "none";
+      dadosRelatorio = [];
     });
 }
 

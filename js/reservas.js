@@ -76,9 +76,15 @@ function criarCard(reserva) {
     .join("<br>");
 
   card.innerHTML =
-    "<strong>Sala:</strong> " +
+    "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
+    "<strong>Sala:</strong>&nbsp;" +
     reserva.nomeSala +
-    "<br>" +
+    '<span class="status status-' +
+    reserva.status.toLowerCase() +
+    '">' +
+    reserva.status +
+    "</span>" +
+    "</div>" +
     "<strong>Data:</strong> " +
     reserva.dataReserva +
     "<br>" +
@@ -88,12 +94,7 @@ function criarCard(reserva) {
     reserva.horarioFim.substring(0, 5) +
     "<br>" +
     "<strong>Dispositivos:</strong><br>" +
-    itensTexto +
-    '<br><span class="status status-' +
-    reserva.status.toLowerCase() +
-    '">' +
-    reserva.status +
-    "</span>";
+    itensTexto;
 
   return card;
 }

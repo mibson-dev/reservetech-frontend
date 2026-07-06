@@ -71,9 +71,16 @@ function carregarReservas(status) {
           .join(", ");
 
         card.innerHTML =
+          "<div style='display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;'>" +
           "<strong>" +
           reserva.nomeUsuario +
-          "</strong> — " +
+          "</strong>" +
+          '<span class="status status-' +
+          reserva.status.toLowerCase() +
+          '">' +
+          reserva.status +
+          "</span>" +
+          "</div>" +
           reserva.nomeSala +
           " — " +
           reserva.dataReserva +
@@ -82,12 +89,7 @@ function carregarReservas(status) {
           " às " +
           reserva.horarioFim.substring(0, 5) +
           "<br>Itens: " +
-          itensTexto +
-          '<br><span class="status status-' +
-          reserva.status.toLowerCase() +
-          '">' +
-          reserva.status +
-          "</span>";
+          itensTexto;
 
         const br = document.createElement("br");
         card.appendChild(br);
